@@ -21,7 +21,6 @@ export default function App() {
   const [lives, setLives] = useState(3);
   const [score, setScore] = useState(0);
 
-  // Estados del cooldown
   const [isCoolingDown, setIsCoolingDown] = useState(false);
   const [countdown, setCountdown] = useState(3);
 
@@ -31,62 +30,43 @@ export default function App() {
   >(null);
 
   useEffect(() => {
-    // Solo ejecutar cuando las vidas lleguen a 0
     if (lives !== 0) {
       return;
     }
 
-    // Activar cooldown
     setIsCoolingDown(true);
-
-    // Reiniciar contador en 3
     setCountdown(3);
 
-    // Cooldown de 3 segundos
     const timer = setTimeout(() => {
-      // Termina el cooldown
       setIsCoolingDown(false);
-
-      // Recuperar las 3 vidas
       setLives(3);
-
-      // Reiniciar contador
       setCountdown(3);
     }, 3000);
 
-    // Cleanup del setTimeout
     return () => {
       clearTimeout(timer);
     };
   }, [lives]);
 
-
   useEffect(() => {
-    // El intervalo solo funciona durante el cooldown
     if (!isCoolingDown) {
       return;
     }
 
-    // Ejecutar cada segundo
     const interval = setInterval(() => {
       setCountdown((previousCountdown) => {
-        // 3 -> 2 -> 1
         if (previousCountdown > 1) {
           return previousCountdown - 1;
         }
-
 
         return 1;
       });
     }, 1000);
 
-    // Cleanup del setInterval
     return () => {
       clearInterval(interval);
     };
   }, [isCoolingDown]);
-
-
 
   const resetGame = () => {
     setCurrentQuestion(0);
@@ -133,23 +113,20 @@ export default function App() {
 
   const questionBorderColor =
     lastResult === 'correct'
-      ? '#27AE60'
+      ? '#4CAF50'
       : lastResult === 'wrong'
-      ? '#C00000'
+      ? '#E53935'
       : '#4A90D9';
-
 
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) {
       return 'default';
     }
 
-    // Mostrar la respuesta correcta en verde
     if (index === question.correct) {
       return 'correct';
     }
 
-    // Mostrar la respuesta incorrecta seleccionada en rojo
     if (index === selectedIndex) {
       return 'wrong';
     }
@@ -158,12 +135,10 @@ export default function App() {
   };
 
   const handleAnswer = (index: number) => {
-    // No permitir respuestas durante cooldown
     if (isCoolingDown) {
       return;
     }
 
-    // Evitar múltiples selecciones
     if (selectedIndex !== null) {
       return;
     }
@@ -173,29 +148,23 @@ export default function App() {
     const isCorrect = index === question.correct;
 
     if (isCorrect) {
-      // Respuesta correcta
       setLastResult('correct');
 
-      // Aumentar puntaje en 1
       setScore(
         (previousScore) => previousScore + 1
       );
     } else {
-      // Respuesta incorrecta
       setLastResult('wrong');
 
-      // Perder 1 vida
       setLives(
         (previousLives) => previousLives - 1
       );
     }
 
-    // Esperar 800 ms antes de continuar
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
 
-      // Solo avanzar si la respuesta fue correcta
       if (isCorrect) {
         setCurrentQuestion(
           (previousQuestion) => previousQuestion + 1
@@ -204,12 +173,10 @@ export default function App() {
     }, 800);
   };
 
-
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
 
-        {/* CABECERA */}
         <View style={styles.header}>
           <Text style={styles.logo}>
             PopQuiz
@@ -217,7 +184,6 @@ export default function App() {
 
           <View style={styles.stats}>
 
-            {/* VIDAS */}
             <Text
               style={[
                 styles.statText,
@@ -233,9 +199,8 @@ export default function App() {
               {'❤️ '.repeat(lives).trim()}
             </Text>
 
-            {/* PUNTAJE */}
             <Text style={styles.statText}>
-              Puntaje: {score} / 10
+              Puntaje: {score} / {questions.length}
             </Text>
 
           </View>
@@ -259,7 +224,6 @@ export default function App() {
           </Text>
         </View>
 
-        {/* OPCIONES */}
         <ScrollView
           style={styles.options}
           contentContainerStyle={styles.optionsContent}
@@ -269,12 +233,10 @@ export default function App() {
               key={index}
               label={option}
               onPress={() => handleAnswer(index)}
-
               disabled={
                 isCoolingDown ||
                 selectedIndex !== null
               }
-
               variant={getVariant(index)}
             />
           ))}
@@ -293,7 +255,6 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

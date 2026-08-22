@@ -14,7 +14,7 @@ export default function AnswerButton({
   disabled = false,
   variant = 'default',
 }: AnswerButtonProps) {
-  const g etBackgroundColor = () => {
+  const getBackgroundColor = () => {
     if (disabled) return '#B0BEC5';
     if (variant === 'correct') return '#4CAF50';
     if (variant === 'wrong') return '#E53935';
