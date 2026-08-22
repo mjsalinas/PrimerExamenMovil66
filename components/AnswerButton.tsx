@@ -1,40 +1,55 @@
-import { Pressable, StyleSheet, Text } from 'react-native';
+import React from "react";
+import { Pressable, StyleSheet, Text } from "react-native";
 
 type AnswerButtonProps = {
   label: string;
   onPress: () => void;
   disabled?: boolean;
-  variant?: 'default' | 'correct' | 'wrong';
+  variant?: "default" | "correct" | "wrong";
 };
 
 export default function AnswerButton({
   label,
   onPress,
   disabled = false,
-  variant = 'default',
+  variant = "default",
 }: AnswerButtonProps) {
   const getBackgroundColor = () => {
-    if (disabled) return '#FFFFFF'; // INCORRECTO — debe ser '#B0BEC5'
-    if (variant === 'correct') return '#E53935'; // INCORRECTO — debe ser '#4CAF50'
-    if (variant === 'wrong') return '#4CAF50'; // INCORRECTO — debe ser '#E53935'
-    return '#FFFFFF';
+    if (disabled) return "#B0BEC5";
+    if (variant === "correct") return "#4CAF50"; 
+    if (variant === "wrong") return "#E53935"; 
+    return "#FFFFFF";
   };
 
   const getTextColor = () => {
-    if (disabled) return '#1A1A2E'; // INCORRECTO — debe ser '#78909C'
-    if (variant === 'correct' || variant === 'wrong') return '#FFFFFF';
-    return '#1A1A2E';
+    if (disabled) return "#78909C"; 
+    if (variant === "correct" || variant === "wrong") return "#FFFFFF";
+    return "#1A1A2E";
   };
 
   const getBorderColor = () => {
-    if (variant === 'correct' || variant === 'wrong') return 'transparent';
-    return '#4A90D9';
+    if (variant === "correct" || variant === "wrong") return "transparent";
+    return "#4A90D9";
+  };
+
+  const getOpacity = () => {
+    return disabled ? 0.55 : 1;
   };
 
   return (
-    // INCORRECTO (así debe quedar): falta disabled={disabled}
-    // INCORRECTO — falta: style={({ pressed }) => [..., pressed && styles.pressed]}
-    <Pressable onPress={onPress} style={[styles.button, { backgroundColor: getBackgroundColor(), borderColor: getBorderColor() }]}>
+    <Pressable
+      disabled={disabled}
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.button,
+        {
+          backgroundColor: getBackgroundColor(),
+          borderColor: getBorderColor(),
+          opacity: getOpacity(),
+        },
+        pressed && styles.pressed,
+      ]}
+    >
       <Text style={[styles.label, { color: getTextColor() }]}>{label}</Text>
     </Pressable>
   );
@@ -47,14 +62,13 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 16,
     marginVertical: 6,
-    alignItems: 'center',
-    opacity: 1, // INCORRECTO — debe ser disabled ? 0.55 : 1
+    alignItems: "center",
   },
   label: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   pressed: {
-    backgroundColor: '#DBEAFE',
+    backgroundColor: "#DBEAFE",
   },
 });
