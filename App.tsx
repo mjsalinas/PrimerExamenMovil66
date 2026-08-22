@@ -65,7 +65,7 @@ export default function App() {
         </SafeAreaView>
       </SafeAreaProvider>
     );
-  }
+  } /*ioyggi*/
 
   const question = questions[currentQuestion];
   const questionBorderColor = '#4A90D9'; // siempre azul — debe cambiar según lastResult
