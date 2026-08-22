@@ -42,9 +42,11 @@ export default function App() {
     setScore(0);
     setSelectedIndex(null);
     setLastResult(null);
+    setIsCoolingDown(false);
+    setCountdown(3);
   };
 
-  if (currentQuestion > questions.length) { 
+  if (currentQuestion >= questions.length) { 
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
@@ -69,7 +71,7 @@ export default function App() {
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return 'default'; 
     if (index === question.correct) return 'wrong';  
-    if (index === selectedIndex)    return 'correct';  
+    if (index === selectedIndex) return 'correct';  
     return 'default';
   };
 
