@@ -18,23 +18,32 @@ export default function App() {
   const [lives, setLives] = useState(3); 
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); 
+  const [countdown, setCountdown] = useState(3); 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
   useEffect(() => {
-    setIsCoolingDown(true);      
-    setLives(3);                  
-    const timer = setTimeout(() => {
-    }, 3000);
-    setIsCoolingDown(false);   
-  }, []); 
+    if(lives === 0){
+      setIsCoolingDown(true);      
+      setCountdown(3);    
+                    
+      const timer = setTimeout(() => {
+        setIsCoolingDown(false); 
+        setLives(3);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+      
+  }, [lives]); 
 
   useEffect(() => {
     if (!isCoolingDown) return;
+
     const interval = setInterval(() => {
-      setCountdown(c => c + 1); 
+      setCountdown((currentQuestion) => (currentQuestion > 1 ? currentQuestion - 1 : 1)); 
     }, 1000);
+
+    return () => clearInterval(interval);
   }, [isCoolingDown]);
 
   const resetGame = () => {
@@ -45,7 +54,7 @@ export default function App() {
     setLastResult(null);
   };
 
-  if (currentQuestion > questions.length || lives <= 0 ) { 
+  if (currentQuestion >= questions.length) { 
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
@@ -90,7 +99,7 @@ export default function App() {
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
-      setCurrentQuestion(prev => prev + 1); 
+      setCurrentQuestion(currentQuestion + 1); 
     }, 800);
   };
 
@@ -126,12 +135,13 @@ export default function App() {
         ))}
       </ScrollView>
 
-      {/* INCORRECTO: siempre visible */}
+      {isCoolingDown && (
       <View style={styles.cooldownBanner}>
         <Text style={styles.cooldownText}>
           ⏳ Espera {countdown} segundo(s) para continuar...
         </Text>
       </View>
+      )}
     </SafeAreaView>
     </SafeAreaProvider>
   );
