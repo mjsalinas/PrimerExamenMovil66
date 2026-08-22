@@ -90,7 +90,7 @@ export default function App() {
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
-      setCurrentQuestion(currentQuestion); 
+      setCurrentQuestion(currentQuestion + 1);
     }, 800);
   };
 
