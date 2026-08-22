@@ -48,7 +48,7 @@ useEffect(() => {
     setLastResult(null);
   };
 
-  if (currentQuestion > questions.length) { 
+  if (currentQuestion >= questions.length) { 
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
@@ -68,7 +68,11 @@ useEffect(() => {
   }
 
   const question = questions[currentQuestion];
-  const questionBorderColor = '#4A90D9'; 
+
+  const questionBorderColor =
+  lastResult === 'correct' ? '#4CAF50' :
+  lastResult === 'wrong' ? '#E53935' :
+  '#4A90D9';
 
   const getVariant = (index: number): AnswerVariant => {
   if (selectedIndex === null) return 'default';
@@ -78,24 +82,25 @@ useEffect(() => {
 };
 
   const handleAnswer = (index: number) => {
-    if (selectedIndex !== null || isCoolingDown) return;
+  if (selectedIndex !== null || isCoolingDown) return;
+  setSelectedIndex(index);
+  
+  const isCorrect = index === question.correct;
 
-    setSelectedIndex(index);
-
-    if (index === question.correct) {
-      setLastResult('correct');
-      setScore(score); 
-    } else {
-      setLastResult('wrong');
-      setLives(lives + 1); 
-    }
+    if (isCorrect) {
+    setLastResult('correct');
+    setScore(score + 1);
+  } else {
+    setLastResult('wrong');
+    setLives(lives - 1);
+  }
 
     setTimeout(() => {
-      setSelectedIndex(null);
-      setLastResult(null);
-      setCurrentQuestion(currentQuestion); 
-    }, 800);
-  };
+    setSelectedIndex(null);
+    setLastResult(null);
+    if (isCorrect) setCurrentQuestion(currentQuestion + 1);
+  }, 800);
+};
 
   return (
     <SafeAreaProvider>
@@ -130,15 +135,20 @@ useEffect(() => {
       </ScrollView>
 
       {/* INCORRECTO: siempre visible */}
-      <View style={styles.cooldownBanner}>
+      
+      {isCoolingDown && (
+        <View style={styles.cooldownBanner}>
         <Text style={styles.cooldownText}>
           ⏳ Espera {countdown} segundo(s) para continuar...
         </Text>
       </View>
+      )}
     </SafeAreaView>
     </SafeAreaProvider>
-  );
+ );   
 }
+  
+
 
 const styles = StyleSheet.create({
   container: {
