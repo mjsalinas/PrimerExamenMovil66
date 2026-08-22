@@ -51,7 +51,7 @@ export default function App() {
 
   //
 
-  if (currentQuestion > questions.length) { 
+  if (currentQuestion >= questions.length) {
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
@@ -69,14 +69,16 @@ export default function App() {
       </SafeAreaProvider>
     );
   }
+//
+   const question = questions[currentQuestion];
+  const questionBorderColor =
+    lastResult === 'correct' ? '#4CAF50' :
+    lastResult === 'wrong' ? '#E53935' : '#4A90D9';
 
-  const question = questions[currentQuestion];
-  const questionBorderColor = '#4A90D9'; 
-
-  const getVariant = (index: number): AnswerVariant => {
+    const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return 'default';
-    if (index === question.correct) return 'wrong';  
-    if (index === selectedIndex)    return 'correct';  
+    if (index === question.correct) return 'correct';
+    if (index === selectedIndex) return 'wrong';
     return 'default';
   };
 //
@@ -135,12 +137,13 @@ export default function App() {
         ))}
       </ScrollView>
 
-      {/* INCORRECTO: siempre visible */}
-      <View style={styles.cooldownBanner}>
-        <Text style={styles.cooldownText}>
-          ⏳ Espera {countdown} segundo(s) para continuar...
-        </Text>
-      </View>
+         {isCoolingDown && (
+        <View style={styles.cooldownBanner}>
+          <Text style={styles.cooldownText}>
+            ⏳ Espera {countdown} segundo(s) para continuar...
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
     </SafeAreaProvider>
   );
