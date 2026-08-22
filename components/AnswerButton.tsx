@@ -34,7 +34,7 @@ export default function AnswerButton({
 
 
   return (
-    <Pressable onPress={onPress} style={[styles.button, { backgroundColor: getBackgroundColor(), borderColor: getBorderColor() }]}>
+    <Pressable disabled={disabled} onPress={onPress} style={[styles.button, { backgroundColor: getBackgroundColor(), borderColor: getBorderColor() }]}>
       <Text style={[styles.label, { color: getTextColor() }]}>{label}</Text>
     </Pressable>
   );
