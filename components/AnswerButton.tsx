@@ -15,14 +15,14 @@ export default function AnswerButton({
   variant = 'default',
 }: AnswerButtonProps) {
   const getBackgroundColor = () => {
-    if (disabled) return '#FFFFFF'; 
+    if (disabled) return '#B0BEC5';
     if (variant === 'correct') return '#4CAF50';
     if (variant === 'wrong') return '#E53935';
     return '#FFFFFF';
   };
 
   const getTextColor = () => {
-    if (disabled) return '#1A1A2E'; 
+    if (disabled) return '#78909C';
     if (variant === 'correct' || variant === 'wrong') return '#FFFFFF';
     return '#1A1A2E';
   };
@@ -38,7 +38,7 @@ export default function AnswerButton({
       disabled={disabled}
       style={({ pressed }) => [
         styles.button,
-        { backgroundColor: getBackgroundColor(), borderColor: getBorderColor() },
+        { backgroundColor: getBackgroundColor(), borderColor: getBorderColor(), opacity: disabled ? 0.55 : 1 },
         pressed && !disabled && styles.pressed,
       ]}
     >
