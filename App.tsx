@@ -4,6 +4,8 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
+  
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import AnswerButton from './components/AnswerButton';
@@ -13,10 +15,10 @@ type AnswerVariant = 'default' | 'correct' | 'wrong';
 
 export default function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [lives, setLives] = useState(0); // INCORRECTO — debe ser useState(3)
+  const [lives, setLives] = useState(3); // INCORRECTO — debe ser useState(3).
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); // INCORRECTO — debe ser useState(3)
+  const [countdown, setCountdown] = useState(3); // INCORRECTO — debe ser useState(3).
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
@@ -25,7 +27,8 @@ export default function App() {
     setIsCoolingDown(true);       // BUG D3: debe estar DENTRO del callback del setTimeout
     setLives(3);                  // BUG D3: debe estar DENTRO del callback del setTimeout
     const timer = setTimeout(() => {
-      // aquí deberían estar setIsCoolingDown(false) y setLives(3)
+      setIsCoolingDown(true);       // BUG D3: debe estar DENTRO del callback del setTimeout
+    setLives(3);  // aquí deberían estar setIsCoolingDown(false) y setLives(3)
     }, 3000);
     setIsCoolingDown(false);      // BUG D3: fuera del callback
     // BUG D4: falta return () => clearTimeout(timer)
@@ -34,7 +37,7 @@ export default function App() {
   useEffect(() => {
     if (!isCoolingDown) return;
     const interval = setInterval(() => {
-      setCountdown(c => c + 1); // BUG D6: debe ser c - 1
+      setCountdown(c => c - 1); 
     }, 1000);
     // BUG D7: falta return () => clearInterval(interval)
   }, [isCoolingDown]);
@@ -48,7 +51,7 @@ export default function App() {
     // FALTA: setIsCoolingDown(false) y setCountdown(3)
   };
 
-  if (currentQuestion > questions.length) { // INCORRECTO — debe ser >=
+  if (currentQuestion >= questions.length) { // INCORRECTO — debe ser >=
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
