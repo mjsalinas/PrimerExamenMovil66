@@ -23,14 +23,6 @@ export default function App() {
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
   useEffect(() => {
-    setIsCoolingDown(true);
-    const timer = setTimeout(() => {
-      setIsCoolingDown(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
     if (!isCoolingDown) return;
     const interval = setInterval(() => {
       setCountdown(c => Math.max(c - 1, 0));
