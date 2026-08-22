@@ -160,8 +160,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     alignItems: 'center',
     marginBottom: 20,
   },
@@ -172,7 +171,8 @@ const styles = StyleSheet.create({
   },
   stats: {
     flexDirection: 'row',
-    gap: 16,
+    gap: 24,
+    marginTop: 10,
   },
   statText: {
     color: '#FFFFFF',
