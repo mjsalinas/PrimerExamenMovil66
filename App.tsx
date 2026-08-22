@@ -13,7 +13,7 @@ type AnswerVariant = 'default' | 'correct' | 'wrong';
 
 export default function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [lives, setLives] = useState(0); // INCORRECTO — debe ser useState(3)
+  const [lives, setLives] = useState(3); // INCORRECTO — debe ser useState(3)
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
   const [countdown, setCountdown] = useState(0); // INCORRECTO — debe ser useState(3)
@@ -84,16 +84,16 @@ export default function App() {
 
     if (index === question.correct) {
       setLastResult('correct');
-      setScore(score); // INCORRECTO — debe ser setScore(score + 1)
+      setScore(score + 1); // INCORRECTO — debe ser setScore(score + 1)
     } else {
       setLastResult('wrong');
-      setLives(lives + 1); // INCORRECTO — debe ser setLives(lives - 1)
+      setLives(lives - 1); // INCORRECTO — debe ser setLives(lives - 1)
     }
 
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
-      setCurrentQuestion(currentQuestion); // INCORRECTO — debe ser currentQuestion + 1
+      setCurrentQuestion(currentQuestion + 1); // INCORRECTO — debe ser currentQuestion + 1
     }, 800);
   };
 
@@ -103,10 +103,10 @@ export default function App() {
       <View style={styles.header}>
         <Text style={styles.logo}>PopQuiz</Text>
         <View style={styles.stats}>
-          <Text style={[styles.statText, { color: lives < 0 ? '#C00000' : '#FFFFFF' }]}>
-            ❤️ {lives}
+          <Text style={[styles.statText, { color: lives <=1 ? '#C00000' : '#FFFFFF' }]}>
+           Vidas {'❤️' .repeat(lives).trim()}
           </Text>
-          <Text style={styles.statText}>⭐ {score}</Text>
+          <Text style={styles.statText}>Puntaje: ⭐ {score} /{questions.length}</Text>
         </View>
       </View>
 
