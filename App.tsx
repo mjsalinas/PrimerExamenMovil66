@@ -22,20 +22,27 @@ export default function App() {
 
   useEffect(() => {
     // BUG D2: falta if (lives === 0)
+    if (lives === 0) {
     setIsCoolingDown(true);       // BUG D3: debe estar DENTRO del callback del setTimeout
-    setLives(3);                  // BUG D3: debe estar DENTRO del callback del setTimeout
+                     // BUG D3: debe estar DENTRO del callback del setTimeout
     const timer = setTimeout(() => {
+
+    setIsCoolingDown(false);
+    setLives(3); 
       // aquí deberían estar setIsCoolingDown(false) y setLives(3)
     }, 3000);
-    setIsCoolingDown(false);      // BUG D3: fuera del callback
+    return () => clearTimeout (timer);
+          // BUG D3: fuera del callback
     // BUG D4: falta return () => clearTimeout(timer)
-  }, []); // BUG D1: debe ser [lives]
+  }
+  }, [lives]); // BUG D1: debe ser [lives]
 
   useEffect(() => {
     if (!isCoolingDown) return;
     const interval = setInterval(() => {
-      setCountdown(c => c + 1); // BUG D6: debe ser c - 1
+      setCountdown(c => c - 1); // BUG D6: debe ser c - 1
     }, 1000);
+    return () => clearInterval (interval)
     // BUG D7: falta return () => clearInterval(interval)
   }, [isCoolingDown]);
 
@@ -104,7 +111,7 @@ export default function App() {
         <Text style={styles.logo}>PopQuiz</Text>
         <View style={styles.stats}>
           <Text style={[styles.statText, { color: lives <=1 ? '#C00000' : '#FFFFFF' }]}>
-           Vidas {'❤️' .repeat(lives).trim()}
+           Vidas: {'❤️' .repeat(lives).trim()}
           </Text>
           <Text style={styles.statText}>Puntaje: ⭐ {score} /{questions.length}</Text>
         </View>
