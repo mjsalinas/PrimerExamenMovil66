@@ -95,7 +95,9 @@ export default function App() {
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
-      setCurrentQuestion(currentQuestion + 1);
+      if (index === question.correct) {
+        setCurrentQuestion(currentQuestion + 1);
+      }
     }, 800);
   };
 
