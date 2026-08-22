@@ -21,13 +21,19 @@ export default function App() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
-  useEffect(() => {
-    setIsCoolingDown(true);      
-    setLives(3);                  
-    const timer = setTimeout(() => {
-    }, 3000);
-    setIsCoolingDown(false);   
-  }, []); 
+ useEffect(() => {
+    if (lives === 0 && !isCoolingDown) {
+      setIsCoolingDown(true);
+      setCountdown(3);
+
+      const timer = setTimeout(() => {
+        setLives(3);
+        setIsCoolingDown(false);
+        setLastResult(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [lives, isCoolingDown]);
 
   useEffect(() => {
     if (!isCoolingDown) return;
