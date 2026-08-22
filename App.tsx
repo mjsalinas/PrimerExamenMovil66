@@ -69,7 +69,12 @@ export default function App() {
   }
 
   const question = questions[currentQuestion];
-  const questionBorderColor = '#4A90D9';
+  const questionBorderColor =
+    lastResult === 'correct'
+      ? '#4CAF50'
+      : lastResult === 'wrong'
+        ? '#E53935'
+        : '#4A90D9';
 
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return 'default';
