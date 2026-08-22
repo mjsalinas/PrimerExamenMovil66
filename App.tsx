@@ -65,8 +65,26 @@ export default function App() {
     );
   }
 
+  if (lives <= 0) {
+    return (
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.resultCard}>
+            <Text style={styles.resultTitle}>¡Te quedaste sin vidas!</Text>
+            <Text style={styles.resultScore}>
+              Puntaje: {score} / {questions.length}
+            </Text>
+            <TouchableOpacity style={styles.resetButton} onPress={resetGame}>
+              <Text style={styles.resetButtonText}>Intentar de nuevo</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    );
+  }
+
   const question = questions[currentQuestion];
-  const questionBorderColor = '#4A90D9'; 
+  const questionBorderColor = '#4A90D9';
 
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return 'default';
