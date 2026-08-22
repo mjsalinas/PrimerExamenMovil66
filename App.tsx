@@ -15,30 +15,31 @@ type AnswerVariant = 'default' | 'correct' | 'wrong';
 
 export default function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [lives, setLives] = useState(0); // INCORRECTO — debe ser useState(3)
+  const [lives, setLives] = useState(3); // INCORRECTO — debe ser useState(3)
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); // INCORRECTO — debe ser useState(3)
+  const [countdown, setCountdown] = useState(3); // INCORRECTO — debe ser useState(3)
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
   useEffect(() => {
-    // BUG D2: falta if (lives === 0)
-    setIsCoolingDown(true);       // BUG D3: debe estar DENTRO del callback del setTimeout
-    setLives(3);                  // BUG D3: debe estar DENTRO del callback del setTimeout
-    const timer = setTimeout(() => {
-      // aquí deberían estar setIsCoolingDown(false) y setLives(3)
-    }, 3000);
-    setIsCoolingDown(false);      // BUG D3: fuera del callback
-    // BUG D4: falta return () => clearTimeout(timer)
-  }, []); // BUG D1: debe ser [lives]
+    if (lives === 0) {
+      setIsCoolingDown(true);
+      setCountdown(3);
+      const timer = setTimeout(() => {
+        setLives(3);
+        setIsCoolingDown(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [lives]);
 
   useEffect(() => {
     if (!isCoolingDown) return;
     const interval = setInterval(() => {
-      setCountdown(c => c + 1); // BUG D6: debe ser c - 1
+      setCountdown(c => c - 1); 
     }, 1000);
-    // BUG D7: falta return () => clearInterval(interval)
+    return () => clearInterval(interval); 
   }, [isCoolingDown]);
 
   const resetGame = () => {
@@ -47,10 +48,11 @@ export default function App() {
     setScore(0);
     setSelectedIndex(null);
     setLastResult(null);
-    // FALTA: setIsCoolingDown(false) y setCountdown(3)
+    setIsCoolingDown(false);
+    setCountdown(3)
   };
 
-  if (currentQuestion > questions.length) { // INCORRECTO — debe ser >=
+  if (currentQuestion >= questions.length) { // INCORRECTO — debe ser >=
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
@@ -70,12 +72,13 @@ export default function App() {
   }
 
   const question = questions[currentQuestion];
-  const questionBorderColor = '#4A90D9'; // siempre azul — debe cambiar según lastResult
+  const questionBorderColor =
+    lastResult === 'correct' ? '#4CAF50' : lastResult === 'wrong' ? '#E53935' : '#4A90D9';
 
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return 'default';
-    if (index === question.correct) return 'wrong';   // INCORRECTO — debe ser 'correct'
-    if (index === selectedIndex)    return 'correct';  // INCORRECTO — debe ser 'wrong'
+    if (index === question.correct) return 'correct';   
+    if (index === selectedIndex) return 'wrong';  
     return 'default';
   };
 
@@ -86,58 +89,58 @@ export default function App() {
 
     if (index === question.correct) {
       setLastResult('correct');
-      setScore(score); // INCORRECTO — debe ser setScore(score + 1)
+      setScore(score + 1); 
     } else {
       setLastResult('wrong');
-      setLives(lives + 1); // INCORRECTO — debe ser setLives(lives - 1)
+      setLives(lives - 1);
     }
 
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
-      setCurrentQuestion(currentQuestion); // INCORRECTO — debe ser currentQuestion + 1
+      setCurrentQuestion(currentQuestion + 1); 
     }, 800);
   };
 
   return (
     <SafeAreaProvider>
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.logo}>PopQuiz</Text>
-        <View style={styles.stats}>
-          <Text style={[styles.statText, { color: lives < 0 ? '#C00000' : '#FFFFFF' }]}>
-            ❤️ {lives}
-          </Text>
-          <Text style={styles.statText}>⭐ {score}</Text>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.logo}>PopQuiz </Text>
+          <View style={styles.stats}>
+            <Text style={[styles.statText, { color: lives <= 1 ? '#C00000' : '#FFFFFF' }]}>
+              {lives} {Array.from({ length: lives }, () => '❤️').join(' ')}
+            </Text>
+            <Text style={styles.statText}>Puntaje: {score} / {questions.length}</Text>
+          </View>
         </View>
-      </View>
 
-      <View style={[styles.questionCard, { borderColor: questionBorderColor }]}>
-        <Text style={styles.questionNumber}>
-          Pregunta {currentQuestion + 1} de {questions.length}
-        </Text>
-        <Text style={styles.questionText}>{question.question}</Text>
-      </View>
+        <View style={[styles.questionCard, { borderColor: questionBorderColor }]}>
+          <Text style={styles.questionNumber}>
+            Pregunta {currentQuestion + 1} de {questions.length}
+          </Text>
+          <Text style={styles.questionText}>{question.question}</Text>
+        </View>
 
-      <ScrollView style={styles.options} contentContainerStyle={styles.optionsContent}>
-        {question.options.map((option, index) => (
-          <AnswerButton
-            key={index}
-            label={option}
-            onPress={() => handleAnswer(index)}
-            disabled={isCoolingDown || selectedIndex !== null}
-            variant={getVariant(index)}
-          />
-        ))}
-      </ScrollView>
+        <ScrollView style={styles.options} contentContainerStyle={styles.optionsContent}>
+          {question.options.map((option, index) => (
+            <AnswerButton
+              key={index}
+              label={option}
+              onPress={() => handleAnswer(index)}
+              disabled={isCoolingDown || selectedIndex !== null}
+              variant={getVariant(index)}
+            />
+          ))}
+        </ScrollView>
 
-      {/* INCORRECTO: siempre visible */}
-      <View style={styles.cooldownBanner}>
-        <Text style={styles.cooldownText}>
-          ⏳ Espera {countdown} segundo(s) para continuar...
-        </Text>
-      </View>
-    </SafeAreaView>
+        {isCoolingDown && countdown > 0 && (
+          <View style={styles.cooldownBanner}>
+            <Text style={styles.cooldownText}>
+              ⏳ Espera {countdown} segundo(s) para continuar...
+            </Text>
+          </View>)}
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
