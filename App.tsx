@@ -85,7 +85,7 @@ export default function App() {
       setScore(score + 1);
     } else {
       setLastResult('wrong');
-      setLives(lives + 1); 
+      setLives(lives - 1);
     }
 
     setTimeout(() => {
