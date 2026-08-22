@@ -13,8 +13,8 @@ import { questions } from './data/questions';
 type AnswerVariant = 'default' | 'correct' | 'wrong';
 //Hola
 export default function App() {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [lives, setLives] = useState(0); 
+  const [currentQuestion, setCurrentQuestion] = useState(0); 
+  const [lives, setLives] = useState(3);
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
   const [countdown, setCountdown] = useState(0); 
@@ -67,7 +67,7 @@ export default function App() {
   const questionBorderColor = '#4A90D9'; 
 
   const getVariant = (index: number): AnswerVariant => {
-    if (selectedIndex === null) return 'default';
+    if (selectedIndex === null) return 'default'; 
     if (index === question.correct) return 'wrong';  
     if (index === selectedIndex)    return 'correct';  
     return 'default';
@@ -99,7 +99,7 @@ export default function App() {
       <View style={styles.header}>
         <Text style={styles.logo}>PopQuiz</Text>
         <View style={styles.stats}>
-          <Text style={[styles.statText, { color: lives < 0 ? '#C00000' : '#FFFFFF' }]}>
+          <Text style={[styles.statText, { color: lives < 1 ? '#C00000' : '#FFFFFF' }]}>
             ❤️ {lives}
           </Text>
           <Text style={styles.statText}>⭐ {score}</Text>
