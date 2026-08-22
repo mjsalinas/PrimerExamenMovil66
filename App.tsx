@@ -92,6 +92,15 @@ export default function App() {
     if (selectedIndex !== null || isCoolingDown) return;
 
     setSelectedIndex(index);
+    const isCorrect = index === question.correct;
+
+    if (isCorrect) {
+      setScore((prev) => prev + 1);
+      setLastResult('correct');
+    } else {
+      setLives((prev) => prev - 1);
+      setLastResult('wrong');
+    }
 
     if (index === question.correct) {
       setLastResult('correct');
@@ -103,25 +112,27 @@ export default function App() {
 
     setTimeout(() => {
       setSelectedIndex(null);
-      setLastResult(null);
-      setCurrentQuestion(currentQuestion); 
+      setCurrentQuestion((prev) => prev + 1);
     }, 800);
   };
-
  
+  const renderHearts = () => {
+    return '❤️ '.repeat(Math.max(0, lives)).trim();
+  };
+
   return (
     <SafeAreaProvider>
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.logo}>PopQuiz</Text>
-        <View style={styles.stats}>
-          <Text style={[styles.statText, { color: lives < 0 ? '#C00000' : '#FFFFFF' }]}>
-            ❤️ {lives}
-          </Text>
-          <Text style={styles.statText}>⭐ {score}</Text>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.logo}>PopQuiz</Text>
+          <View style={styles.stats}>
+            <Text style={[styles.statText, { color: lives <= 1 ? '#E53935' : '#FFFFFF' }]}>
+              Vidas: {renderHearts()}
+            </Text>
+            <Text style={styles.statText}>Puntaje: {score} / 10</Text>
+          </View>
         </View>
-      </View>
-
+        
        <View style={[styles.questionCard, { borderColor: getBorderColor() }]}>
           <Text style={styles.questionNumber}>
             Pregunta {currentQuestion + 1} de {questions.length}
