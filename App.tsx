@@ -22,19 +22,23 @@ export default function App() {
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
   useEffect(() => {
-    setIsCoolingDown(true);      
-    setLives(3);                  
-    const timer = setTimeout(() => {
-    }, 3000);
-    setIsCoolingDown(false);   
-  }, []); 
+  if (lives !== 0) return;
+  setIsCoolingDown(true);
+  const timer = setTimeout(() => {
+    setIsCoolingDown(false);
+    setLives(3);
+  }, 3000);
+  return () => clearTimeout(timer);
+}, [lives]);
 
-  useEffect(() => {
-    if (!isCoolingDown) return;
-    const interval = setInterval(() => {
-      setCountdown(c => c + 1); 
-    }, 1000);
-  }, [isCoolingDown]);
+useEffect(() => {
+  if (!isCoolingDown) return;
+  setCountdown(3);
+  const interval = setInterval(() => {
+    setCountdown(c => (c <= 1 ? 0 : c - 1));
+  }, 1000);
+  return () => clearInterval(interval);
+}, [isCoolingDown]);
 
   const resetGame = () => {
     setCurrentQuestion(0);
