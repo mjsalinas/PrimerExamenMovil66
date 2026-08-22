@@ -17,7 +17,7 @@ export default function App() {
   const [lives, setLives] = useState(3);
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); 
+  const [countdown, setCountdown] = useState(3);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
@@ -32,8 +32,9 @@ export default function App() {
   useEffect(() => {
     if (!isCoolingDown) return;
     const interval = setInterval(() => {
-      setCountdown(c => c + 1); 
+      setCountdown(c => Math.max(c - 1, 0));
     }, 1000);
+    return () => clearInterval(interval);
   }, [isCoolingDown]);
 
   const resetGame = () => {
