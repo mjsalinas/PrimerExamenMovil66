@@ -16,14 +16,15 @@ export default function AnswerButton({
 }: AnswerButtonProps) {
   const getBackgroundColor = () => {
     if (disabled) return '#FFFFFF'; 
-    if (variant === 'correct') return '#E53935';
-    if (variant === 'wrong') return '#4CAF50';
+    if (variant === 'wrong') return '#E53935';
+    if (variant === 'correct') return '#4CAF50';
     return '#FFFFFF';
   };
 
   const getTextColor = () => {
     if (disabled) return '#1A1A2E'; 
     if (variant === 'correct' || variant === 'wrong') return '#FFFFFF';
+    
     return '#1A1A2E';
   };
 
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginVertical: 6,
     alignItems: 'center',
-    opacity: 1,
+    opacity: 0.55,
   },
   label: {
     fontSize: 16,

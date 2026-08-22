@@ -25,14 +25,19 @@ export default function App() {
   useEffect(() => {
     // BUG D2: falta if (lives === 0)
     if (lives === 0)
-    setIsCoolingDown(true);       // BUG D3: debe estar DENTRO del callback del setTimeout
-    setLives(3);                  // BUG D3: debe estar DENTRO del callback del setTimeout
+       setIsCoolingDown(true); 
+         // BUG D3: debe estar DENTRO del callback del setTimeout
+    // BUG D3: debe estar DENTRO del callback del setTimeout
     const timer = setTimeout(() => {
+       setIsCoolingDown(true); 
+      setIsCoolingDown(false); 
+      setLives(3);                  
       // aquí deberían estar setIsCoolingDown(false) y setLives(3)
     }, 3000);
-    setIsCoolingDown(false);      // BUG D3: fuera del callback
+         // BUG D3: fuera del callback
     // BUG D4: falta return () => clearTimeout(timer)
     return () => clearTimeout(timer)
+
   }, [lives]); // BUG D1: debe ser [lives]
 
   useEffect(() => {
@@ -55,7 +60,7 @@ export default function App() {
     // FALTA: setIsCoolingDown(false) y setCountdown(3)
   };
 
-  if (currentQuestion > questions.length) { // INCORRECTO — debe ser >=
+  if (currentQuestion >= questions.length) { // INCORRECTO — debe ser >=
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
@@ -136,7 +141,7 @@ export default function App() {
         ))}
       </ScrollView>
 
-      {/* INCORRECTO: siempre visible */}
+      {isCoolingDown}
       <View style={styles.cooldownBanner}>
         <Text style={styles.cooldownText}>
           ⏳ Espera {countdown} segundo(s) para continuar...
