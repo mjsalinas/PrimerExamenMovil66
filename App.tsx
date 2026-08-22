@@ -113,9 +113,9 @@ const interval = setInterval(() => {
       <View style={styles.header}>
         <Text style={styles.logo}>PopQuiz</Text>
         <View style={styles.stats}>
-          <Text style={[styles.statText, { color: lives <= 1 ? '#C00000' : '#FFFFFF' }]}>
-            ❤️ {lives}
-          </Text>
+        <Text style={[styles.statText, { color: lives <= 1 ? '#C00000' : '#FFFFFF' }]}>
+                Vidas: {'❤️ '.repeat(lives)}
+        </Text>
           <Text style={styles.statText}>⭐ Puntaje: {score} / 10 </Text>
         </View>
       </View>
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   stats: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     gap: 16,
   },
   statText: {
