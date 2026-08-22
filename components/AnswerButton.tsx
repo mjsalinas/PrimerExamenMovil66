@@ -32,7 +32,15 @@ export default function AnswerButton({
   };
 
   return (
-    <Pressable onPress={onPress} style={[styles.button, { backgroundColor: getBackgroundColor(), borderColor: getBorderColor() }]}>
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={({ pressed }) => [
+        styles.button,
+        { backgroundColor: getBackgroundColor(), borderColor: getBorderColor() },
+        pressed && !disabled && styles.pressed,
+      ]}
+    >
       <Text style={[styles.label, { color: getTextColor() }]}>{label}</Text>
     </Pressable>
   );
