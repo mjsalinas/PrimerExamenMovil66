@@ -119,7 +119,7 @@ export default function App() {
       <View style={styles.header}>
         <Text style={styles.logo}>PopQuiz</Text>
         <View style={styles.stats}>
-          <Text style={[styles.statText, { color: lives < 0 ? '#C00000' : '#FFFFFF' }]}>
+          <Text style={[styles.statText, { color: lives <= 1 ? '#C00000' : '#FFFFFF' }]}>
             ❤️ {lives}
           </Text>
           <Text style={styles.statText}>⭐ {score}</Text>
