@@ -82,7 +82,7 @@ export default function App() {
 
     if (index === question.correct) {
       setLastResult('correct');
-      setScore(score); 
+      setScore(score + 1);
     } else {
       setLastResult('wrong');
       setLives(lives + 1); 
