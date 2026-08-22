@@ -20,7 +20,7 @@ export default function AnswerButton({
   if (variant === 'wrong') return '#E53935';
   return '#FFFFFF';
 };
-
+//Cambios
   const getTextColor = () => {
   if (disabled) return '#78909C';
   if (variant === 'correct' || variant === 'wrong') return '#FFFFFF';
