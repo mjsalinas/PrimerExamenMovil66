@@ -1,39 +1,47 @@
 import { useEffect, useState } from 'react';
-import {
+import { 
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView
+   ScrollView
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import AnswerButton from './components/AnswerButton';
 import { questions } from './data/questions';
+import React from 'react';
 
 type AnswerVariant = 'default' | 'correct' | 'wrong';
 
 export default function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [lives, setLives] = useState(0); 
+  const [lives, setLives] = useState(3); // INCORRECTO — debe ser useState(3)
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); 
+  const [countdown, setCountdown] = useState(3); // INCORRECTO — debe ser useState(3)
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
   useEffect(() => {
-    setIsCoolingDown(true);      
-    setLives(3);                  
+    // BUG D2: falta if (lives === 0)
+    if (lives === 0)
+    setIsCoolingDown(true);       // BUG D3: debe estar DENTRO del callback del setTimeout
+    setLives(3);                  // BUG D3: debe estar DENTRO del callback del setTimeout
     const timer = setTimeout(() => {
+      // aquí deberían estar setIsCoolingDown(false) y setLives(3)
     }, 3000);
-    setIsCoolingDown(false);   
-  }, []); 
+    setIsCoolingDown(false);      // BUG D3: fuera del callback
+    // BUG D4: falta return () => clearTimeout(timer)
+    return () => clearTimeout(timer)
+  }, [lives]); // BUG D1: debe ser [lives]
 
   useEffect(() => {
     if (!isCoolingDown) return;
     const interval = setInterval(() => {
-      setCountdown(c => c + 1); 
+      setCountdown(c => c - 1); // BUG D6: debe ser c - 1
     }, 1000);
+    return () => clearInterval(interval)
+    // BUG D7: falta return () => clearInterval(interval)
   }, [isCoolingDown]);
 
   const resetGame = () => {
@@ -42,9 +50,12 @@ export default function App() {
     setScore(0);
     setSelectedIndex(null);
     setLastResult(null);
+     setIsCoolingDown(false)
+     setCountdown(3)
+    // FALTA: setIsCoolingDown(false) y setCountdown(3)
   };
 
-  if (currentQuestion > questions.length) { 
+  if (currentQuestion > questions.length) { // INCORRECTO — debe ser >=
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
@@ -64,12 +75,12 @@ export default function App() {
   }
 
   const question = questions[currentQuestion];
-  const questionBorderColor = '#4A90D9'; 
+  const questionBorderColor = '#4A90D9'; // siempre azul — debe cambiar según lastResult
 
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return 'default';
-    if (index === question.correct) return 'wrong';  
-    if (index === selectedIndex)    return 'correct';  
+    if (index === question.correct) return 'correct';   // INCORRECTO — debe ser 'correct'
+    if (index === selectedIndex)    return 'wrong';  // INCORRECTO — debe ser 'wrong'
     return 'default';
   };
 
@@ -80,16 +91,16 @@ export default function App() {
 
     if (index === question.correct) {
       setLastResult('correct');
-      setScore(score); 
+      setScore(score+1); // INCORRECTO — debe ser setScore(score + 1)
     } else {
       setLastResult('wrong');
-      setLives(lives + 1); 
+      setLives(lives - 1); // INCORRECTO — debe ser setLives(lives - 1)
     }
 
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
-      setCurrentQuestion(currentQuestion); 
+      setCurrentQuestion(currentQuestion+1); // INCORRECTO — debe ser currentQuestion + 1
     }, 800);
   };
 
