@@ -45,7 +45,7 @@ export default function App() {
     setLastResult(null);
   };
 
-  if (currentQuestion > questions.length) { 
+  if (currentQuestion >= questions.length) {
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
