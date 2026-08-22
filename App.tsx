@@ -16,7 +16,7 @@ export default function App() {
   const [lives, setLives] = useState(3); // INCORRECTO — debe ser useState(3)
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); // INCORRECTO — debe ser useState(3)
+  const [countdown, setCountdown] = useState(3); // INCORRECTO — debe ser useState(3)
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
@@ -52,10 +52,12 @@ export default function App() {
     setScore(0);
     setSelectedIndex(null);
     setLastResult(null);
+    setIsCoolingDown(false);
+    setCountdown(3)
     // FALTA: setIsCoolingDown(false) y setCountdown(3)
   };
 
-  if (currentQuestion > questions.length) { // INCORRECTO — debe ser >=
+  if (currentQuestion >= questions.length) { // INCORRECTO — debe ser >=
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
@@ -75,12 +77,15 @@ export default function App() {
   }
 
   const question = questions[currentQuestion];
-  const questionBorderColor = '#4A90D9'; // siempre azul — debe cambiar según lastResult
+  const questionBorderColor = 
+     lastResult === 'correct' ? '#4CAF50' :
+     lastResult === 'wrong' ? '#E53935' :
+     '#4A90D9';// siempre azul — debe cambiar según lastResult
 
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return 'default';
-    if (index === question.correct) return 'wrong';   // INCORRECTO — debe ser 'correct'
-    if (index === selectedIndex)    return 'correct';  // INCORRECTO — debe ser 'wrong'
+    if (index === question.correct) return 'correct';   // INCORRECTO — debe ser 'correct'
+    if (index === selectedIndex)    return 'wrong';  // INCORRECTO — debe ser 'wrong'
     return 'default';
   };
 
@@ -136,12 +141,13 @@ export default function App() {
         ))}
       </ScrollView>
 
-      {/* INCORRECTO: siempre visible */}
+      {isCoolingDown &&/* INCORRECTO: siempre visible */(
       <View style={styles.cooldownBanner}>
         <Text style={styles.cooldownText}>
           ⏳ Espera {countdown} segundo(s) para continuar...
         </Text>
       </View>
+      )}
     </SafeAreaView>
     </SafeAreaProvider>
   );
