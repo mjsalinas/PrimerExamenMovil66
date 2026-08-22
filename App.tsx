@@ -11,7 +11,7 @@ import AnswerButton from './components/AnswerButton';
 import { questions } from './data/questions';
 
 type AnswerVariant = 'default' | 'correct' | 'wrong';
-
+//Hola
 export default function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [lives, setLives] = useState(0); 
