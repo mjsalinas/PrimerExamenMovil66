@@ -16,28 +16,41 @@ export default function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0); 
   const [lives, setLives] = useState(3);
   const [score, setScore] = useState(0);
-  const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); 
+  const [isCoolingDown, setIsCoolingDown] = useState(0);
+  const [countdown, setCountdown] = useState(3); 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
   useEffect(() => {
-    setIsCoolingDown(true);      
-    setLives(3);                  
-    const timer = setTimeout(() => {
-    }, 3000);
-    setIsCoolingDown(false);   
-  }, []); 
+    if (lives === 0) {
+      setIsCoolingDown(true);
+      setCountdown(3);
+      const timer = setTimeout(() => {
+        setLives(3);
+        setIsCoolingDown(false);
+        setCountdown(3);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [lives]);
 
   useEffect(() => {
     if (!isCoolingDown) return;
     const interval = setInterval(() => {
-      setCountdown(c => c + 1); 
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
+
+    return () => clearInterval(interval);
   }, [isCoolingDown]);
 
   const resetGame = () => {
-    setCurrentQuestion(0);
+    setCurrentQuestion(1);
     setLives(3);
     setScore(0);
     setSelectedIndex(null);
@@ -82,7 +95,7 @@ export default function App() {
 
     if (index === question.correct) {
       setLastResult('correct');
-      setScore(score); 
+      setScore(score + 1); 
     } else {
       setLastResult('wrong');
       setLives(lives + 1); 
@@ -91,7 +104,7 @@ export default function App() {
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
-      setCurrentQuestion(currentQuestion); 
+      setCurrentQuestion(currentQuestion + 1);
     }, 800);
   };
 
