@@ -17,8 +17,7 @@ export default function App() {
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
   //
-
-  //
+  
 
     useEffect(() => {
     if (lives === 0) {
@@ -98,7 +97,7 @@ export default function App() {
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
-      setCurrentQuestion(currentQuestion); 
+      setCurrentQuestion(currentQuestion + 1);
     }, 800);
   };
 
