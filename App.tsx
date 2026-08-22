@@ -102,14 +102,6 @@ export default function App() {
       setLastResult('wrong');
     }
 
-    if (index === question.correct) {
-      setLastResult('correct');
-      setScore(score); 
-    } else {
-      setLastResult('wrong');
-      setLives(lives + 1); 
-    }
-
     setTimeout(() => {
       setSelectedIndex(null);
       setCurrentQuestion((prev) => prev + 1);
@@ -132,32 +124,34 @@ export default function App() {
             <Text style={styles.statText}>Puntaje: {score} / 10</Text>
           </View>
         </View>
-        
        <View style={[styles.questionCard, { borderColor: getBorderColor() }]}>
           <Text style={styles.questionNumber}>
             Pregunta {currentQuestion + 1} de {questions.length}
           </Text>
           <Text style={styles.questionText}>{question.question}</Text>
         </View>
-      <ScrollView style={styles.options} contentContainerStyle={styles.optionsContent}>
-        {question.options.map((option, index) => (
-          <AnswerButton
-            key={index}
-            label={option}
-            onPress={() => handleAnswer(index)}
-            disabled={isCoolingDown || selectedIndex !== null}
-            variant={getVariant(index)}
-          />
-        ))}
-      </ScrollView>
 
-      {/* INCORRECTO: siempre visible */}
-      <View style={styles.cooldownBanner}>
-        <Text style={styles.cooldownText}>
-          ⏳ Espera {countdown} segundo(s) para continuar...
-        </Text>
-      </View>
-    </SafeAreaView>
+      <ScrollView style={styles.options} contentContainerStyle={styles.optionsContent}>
+          {question.options.map((option, index) => (
+            <AnswerButton
+              key={index}
+              label={option}
+              onPress={() => handleAnswer(index)}
+              
+              disabled={isCoolingDown || selectedIndex !== null}
+              variant={getVariant(index)}
+            />
+          ))}
+        </ScrollView>
+
+        {isCoolingDown && (
+          <View style={styles.cooldownBanner}>
+            <Text style={styles.cooldownText}>
+              ⏳ Espera {countdown} segundo(s) para continuar...
+            </Text>
+          </View>
+        )}
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
@@ -177,16 +171,17 @@ const styles = StyleSheet.create({
   },
   logo: {
     color: '#FFFFFF',
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: '800',
   },
   stats: {
-    flexDirection: 'row',
-    gap: 16,
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    gap: 4,
   },
   statText: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: '700',
   },
   questionCard: {
