@@ -110,7 +110,9 @@ export default function App() {
           <Text style={[styles.statText, { color: lives <= 1 ? '#C00000' : '#FFFFFF' }]}>
             Vidas: {Array(Math.max(lives, 0)).fill('❤️').join(' ')}
           </Text>
-          <Text style={styles.statText}>⭐ {score}</Text>
+          <Text style={styles.statText}>
+            Puntaje: {score} / {questions.length}
+          </Text>
         </View>
       </View>
 
