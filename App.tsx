@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import AnswerButton from './components/AnswerButton';
 import { questions } from './data/questions';
+import React from 'react';
 
 type AnswerVariant = 'default' | 'correct' | 'wrong';
 
@@ -69,8 +70,8 @@ export default function App() {
 
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return 'default';
-    if (index === question.correct) return 'wrong';  
-    if (index === selectedIndex)    return 'correct';  
+    if (index === question.correct) return 'correct';
+    if (index === selectedIndex) return 'wrong';
     return 'default';
   };
 
