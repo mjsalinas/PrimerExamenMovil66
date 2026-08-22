@@ -128,7 +128,7 @@ export default function App() {
               key={index}
               label={option}
               onPress={() => handleAnswer(index)}
-              disabled={isCoolingDown || selectedIndex !== null}
+              disabled={isCoolingDown}
               variant={getVariant(index)}
             />
           ))}
