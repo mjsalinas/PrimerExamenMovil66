@@ -12,6 +12,8 @@ import { questions } from './data/questions';
 
 type AnswerVariant = 'default' | 'correct' | 'wrong';
 
+/*Comentario de prieba */
+
 export default function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [lives, setLives] = useState(0); 
