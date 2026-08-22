@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text } from 'react-native';
 
-type AnswerButtonProps = {
+type AnswerButtonProps = { 
   label: string;
   onPress: () => void;
   disabled?: boolean;
