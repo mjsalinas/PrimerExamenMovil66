@@ -50,9 +50,11 @@ export default function App() {
     setScore(0);
     setSelectedIndex(null);
     setLastResult(null);
+    setIsCoolingDown(false);
+    setCountdown(3);
   };
-
-  if (currentQuestion > questions.length) { 
+  
+ if (currentQuestion >= questions.length) {
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
@@ -69,19 +71,22 @@ export default function App() {
         </SafeAreaView>
       </SafeAreaProvider>
     );
-  } 
+  }
 
   const question = questions[currentQuestion];
 
-  
-  const questionBorderColor = '#4A90D9'; 
+  const getBorderColor = () => {
+    if (lastResult === 'correct') return '#4CAF50'; 
+    if (lastResult === 'wrong') return '#E53935';   
+    return '#4A90D9';                               
+  };
 
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return 'default';
-    if (index === question.correct) return 'wrong';  
-    if (index === selectedIndex)    return 'correct';  
+    if (index === question.correct) return 'correct';
+    if (index === selectedIndex) return 'wrong';
     return 'default';
-  };
+  }
 
   const handleAnswer = (index: number) => {
     if (selectedIndex !== null || isCoolingDown) return;
@@ -117,13 +122,12 @@ export default function App() {
         </View>
       </View>
 
-      <View style={[styles.questionCard, { borderColor: questionBorderColor }]}>
-        <Text style={styles.questionNumber}>
-          Pregunta {currentQuestion + 1} de {questions.length}
-        </Text>
-        <Text style={styles.questionText}>{question.question}</Text>
-      </View>
-
+       <View style={[styles.questionCard, { borderColor: getBorderColor() }]}>
+          <Text style={styles.questionNumber}>
+            Pregunta {currentQuestion + 1} de {questions.length}
+          </Text>
+          <Text style={styles.questionText}>{question.question}</Text>
+        </View>
       <ScrollView style={styles.options} contentContainerStyle={styles.optionsContent}>
         {question.options.map((option, index) => (
           <AnswerButton
