@@ -6,6 +6,7 @@ import { questions } from './data/questions';
 
 type AnswerVariant = 'default' | 'correct' | 'wrong';
 
+//
 export default function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [lives, setLives] = useState(3);
@@ -15,19 +16,28 @@ export default function App() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
-  useEffect(() => {
-    setIsCoolingDown(true);      
-    setLives(3);                  
-    const timer = setTimeout(() => {
-    }, 3000);
-    setIsCoolingDown(false);   
-  }, []); 
+  //
+
+  //
+
+    useEffect(() => {
+    if (lives === 0) {
+      setIsCoolingDown(true);
+      const timer = setTimeout(() => {
+        setIsCoolingDown(false);
+        setLives(3);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [lives]);
 
   useEffect(() => {
     if (!isCoolingDown) return;
+    setCountdown(3);
     const interval = setInterval(() => {
-      setCountdown(c => c + 1); 
+      setCountdown(c => c - 1);
     }, 1000);
+    return () => clearInterval(interval);
   }, [isCoolingDown]);
 
   const resetGame = () => {
@@ -36,7 +46,11 @@ export default function App() {
     setScore(0);
     setSelectedIndex(null);
     setLastResult(null);
+    setIsCoolingDown(false);
+    setCountdown(3);
   };
+
+  //
 
   if (currentQuestion > questions.length) { 
     return (
@@ -66,7 +80,7 @@ export default function App() {
     if (index === selectedIndex)    return 'correct';  
     return 'default';
   };
-
+//
     const handleAnswer = (index: number) => {
     if (selectedIndex !== null || isCoolingDown) return;
 
@@ -79,6 +93,8 @@ export default function App() {
       setLastResult('wrong');
       setLives(lives - 1);
     }
+
+    //
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
@@ -92,9 +108,11 @@ export default function App() {
       <View style={styles.header}>
         <Text style={styles.logo}>PopQuiz</Text>
         <View style={styles.stats}>
+          //
        <Text style={[styles.statText, { color: lives <= 1 ? '#C00000' : '#FFFFFF' }]}>
   ❤️ {lives}
 </Text>
+//
           <Text style={styles.statText}>⭐ {score}</Text>
         </View>
       </View>
