@@ -108,7 +108,7 @@ export default function App() {
         <Text style={styles.logo}>PopQuiz</Text>
         <View style={styles.stats}>
           <Text style={[styles.statText, { color: lives <= 1 ? '#C00000' : '#FFFFFF' }]}>
-            ❤️ {lives}
+            Vidas: {Array(Math.max(lives, 0)).fill('❤️').join(' ')}
           </Text>
           <Text style={styles.statText}>⭐ {score}</Text>
         </View>
