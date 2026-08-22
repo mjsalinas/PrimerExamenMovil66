@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   questionCard: {
     backgroundColor: '#16213E',
     borderWidth: 3,
-    borderRadius: 16,
+    borderRadius: 15,
     padding: 20,
     marginBottom: 16,
   },
