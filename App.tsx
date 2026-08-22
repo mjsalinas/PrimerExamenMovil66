@@ -22,7 +22,7 @@ export default function App() {
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
   useEffect(() => {
-    if lives > 0) {
+    if (lives === 0 && !isCoolingDown) {
     setIsCoolingDown(true);
     setCountdown(3);
     const timer = setTimeout(() => {
@@ -36,9 +36,8 @@ export default function App() {
   useEffect(() => {
     if (!isCoolingDown) return;
     const interval = setInterval(() => {
-      setCountdown(c => c - 1); 
+      setCountdown(c => { if (c <= 1) { clearInterval(interval); return 0; } return c - 1; }); 
     }, 1000);
-    
     return () => clearInterval(interval);
   }, [isCoolingDown]);
 
@@ -52,7 +51,7 @@ export default function App() {
     setCountdown(3);
   };
 
-  if (currentQuestion > questions.length) { // INCORRECTO — debe ser >=
+  if (currentQuestion >= questions.length) { 
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
@@ -72,12 +71,12 @@ export default function App() {
   }
 
   const question = questions[currentQuestion];
-  const questionBorderColor = '#4A90D9'; // siempre azul — debe cambiar según lastResult
+  const questionBorderColor = lastResult === 'correct' ? '#4CAF50' : lastResult === 'wrong' ? '#E53935' : '#4A90D9';
 
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return 'default';
-    if (index === question.correct) return 'wrong';   // INCORRECTO — debe ser 'correct'
-    if (index === selectedIndex)    return 'correct';  // INCORRECTO — debe ser 'wrong'
+    if (index === question.correct) return 'correct';   
+    if (index === selectedIndex)    return 'wrong';  
     return 'default';
   };
 
@@ -91,7 +90,7 @@ export default function App() {
       setScore(score + 1); 
     } else {
       setLastResult('wrong');
-      setLives(lives - 1);
+      setLives(prevLives => prevLives - 1);
     }
 
     setTimeout(() => {
@@ -134,11 +133,13 @@ export default function App() {
       </ScrollView>
 
       {/* INCORRECTO: siempre visible */}
+      { isCoolingDown && (
       <View style={styles.cooldownBanner}>
         <Text style={styles.cooldownText}>
           ⏳ Espera {countdown} segundo(s) para continuar...
         </Text>
       </View>
+      )}
     </SafeAreaView>
     </SafeAreaProvider>
   );
