@@ -21,20 +21,33 @@ export default function App() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
-  useEffect(() => {
-    setIsCoolingDown(true);      
-    setLives(3);                  
-    const timer = setTimeout(() => {
-    }, 3000);
-    setIsCoolingDown(false);   
-  }, []); 
+useEffect(() => {
+  if (lives !== 0) return;
+  setIsCoolingDown(true);
+  setCountdown(3);
+  const timer = setTimeout(() => {
+    setIsCoolingDown(false);
+    setLives(3);
+    setCountdown(0);
+  }, 3000);
+  return () => clearTimeout(timer);
+}, [lives]);
 
-  useEffect(() => {
-    if (!isCoolingDown) return;
-    const interval = setInterval(() => {
-      setCountdown(c => c + 1); 
-    }, 1000);
-  }, [isCoolingDown]);
+useEffect(() => {
+  if (!isCoolingDown) return;
+
+const interval = setInterval(() => {
+  setCountdown(c => {
+    if (c > 1) {
+      return c - 1;
+    }
+    return c;
+  });
+}, 1000);
+
+  return () => clearInterval(interval);
+}, [isCoolingDown]);
+
 
   const resetGame = () => {
     setCurrentQuestion(0);
@@ -44,7 +57,7 @@ export default function App() {
     setLastResult(null);
   };
 
-  if (currentQuestion > questions.length) { 
+  if (currentQuestion >= questions.length) { 
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
@@ -125,12 +138,12 @@ export default function App() {
         ))}
       </ScrollView>
 
-      {/* INCORRECTO: siempre visible */}
+      
+      {isCoolingDown && (
       <View style={styles.cooldownBanner}>
-        <Text style={styles.cooldownText}>
-          ⏳ Espera {countdown} segundo(s) para continuar...
-        </Text>
+        <Text style={styles.cooldownText}> ⏳ Espera {countdown} segundo(s) para continuar...</Text>
       </View>
+    )}
     </SafeAreaView>
     </SafeAreaProvider>
   );
