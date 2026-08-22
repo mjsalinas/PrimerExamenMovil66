@@ -8,10 +8,10 @@ type AnswerVariant = 'default' | 'correct' | 'wrong';
 
 export default function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [lives, setLives] = useState(0); 
+  const [lives, setLives] = useState(3);
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); 
+  const [countdown, setCountdown] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
@@ -67,19 +67,18 @@ export default function App() {
     return 'default';
   };
 
-  const handleAnswer = (index: number) => {
+    const handleAnswer = (index: number) => {
     if (selectedIndex !== null || isCoolingDown) return;
 
     setSelectedIndex(index);
 
     if (index === question.correct) {
       setLastResult('correct');
-      setScore(score); 
+      setScore(score + 1);
     } else {
       setLastResult('wrong');
-      setLives(lives + 1); 
+      setLives(lives - 1);
     }
-
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
@@ -93,9 +92,9 @@ export default function App() {
       <View style={styles.header}>
         <Text style={styles.logo}>PopQuiz</Text>
         <View style={styles.stats}>
-          <Text style={[styles.statText, { color: lives < 0 ? '#C00000' : '#FFFFFF' }]}>
-            ❤️ {lives}
-          </Text>
+       <Text style={[styles.statText, { color: lives <= 1 ? '#C00000' : '#FFFFFF' }]}>
+  ❤️ {lives}
+</Text>
           <Text style={styles.statText}>⭐ {score}</Text>
         </View>
       </View>
