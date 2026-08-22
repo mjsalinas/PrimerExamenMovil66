@@ -79,23 +79,34 @@ export default function App() {
     return 'default';
   };
 
+  const getHearts = () =>{
+    var hearts = "";
+    for (let index = 0; index < lives; index++) {
+      hearts += "❤️"
+    }
+    return hearts;
+  }
+
   const handleAnswer = (index: number) => {
     if (selectedIndex !== null || isCoolingDown) return;
 
     setSelectedIndex(index);
 
+    var tempQuestion :number = currentQuestion
+
     if (index === question.correct) {
       setLastResult('correct');
-      setScore(score); // INCORRECTO — debe ser setScore(score + 1)
+      setScore(score + 1); // INCORRECTO — debe ser setScore(score + 1)
+      tempQuestion++;
     } else {
       setLastResult('wrong');
-      setLives(lives + 1); // INCORRECTO — debe ser setLives(lives - 1)
+      setLives(lives - 1); // INCORRECTO — debe ser setLives(lives - 1)
     }
 
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
-      setCurrentQuestion(currentQuestion); // INCORRECTO — debe ser currentQuestion + 1
+      setCurrentQuestion(tempQuestion); // INCORRECTO — debe ser currentQuestion + 1
     }, 800);
   };
 
@@ -105,7 +116,11 @@ export default function App() {
       <View style={styles.header}>
         <Text style={styles.logo}>PopQuiz</Text>
         <View style={styles.stats}>
-          <Text style={[styles.statText, { color: lives < 0 ? '#C00000' : '#FFFFFF' }]}>
+          <Text style={styles.statText}>
+            Puntaje: {score} / {questions.length}
+          </Text>
+          <Text style={[styles.statText, { color: lives < 2 ? '#C00000' : '#FFFFFF' }]}>
+            {/* {getHearts()} */}
             ❤️ {lives}
           </Text>
           <Text style={styles.statText}>⭐ {score}</Text>
