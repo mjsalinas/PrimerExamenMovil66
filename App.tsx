@@ -20,43 +20,74 @@ export default function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [lives, setLives] = useState(3);
   const [score, setScore] = useState(0);
+
+  // Estados del cooldown
   const [isCoolingDown, setIsCoolingDown] = useState(false);
   const [countdown, setCountdown] = useState(3);
+
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lastResult, setLastResult] = useState<
     'correct' | 'wrong' | null
   >(null);
 
-  // Cuando el jugador pierde todas las vidas,
-  // activa el cooldown durante 3 segundos
-  // y luego recupera las 3 vidas.
   useEffect(() => {
-    if (lives !== 0) return;
+    // Solo ejecutar cuando las vidas lleguen a 0
+    if (lives !== 0) {
+      return;
+    }
 
+    // Activar cooldown
     setIsCoolingDown(true);
+
+    // Reiniciar contador en 3
     setCountdown(3);
 
+    // Cooldown de 3 segundos
     const timer = setTimeout(() => {
+      // Termina el cooldown
       setIsCoolingDown(false);
+
+      // Recuperar las 3 vidas
       setLives(3);
+
+      // Reiniciar contador
       setCountdown(3);
     }, 3000);
 
-    return () => clearTimeout(timer);
+    // Cleanup del setTimeout
+    return () => {
+      clearTimeout(timer);
+    };
   }, [lives]);
 
-  // Cuenta regresiva del cooldown
-  useEffect(() => {
-    if (!isCoolingDown) return;
 
+  useEffect(() => {
+    // El intervalo solo funciona durante el cooldown
+    if (!isCoolingDown) {
+      return;
+    }
+
+    // Ejecutar cada segundo
     const interval = setInterval(() => {
-      setCountdown((c) => c - 1);
+      setCountdown((previousCountdown) => {
+        // 3 -> 2 -> 1
+        if (previousCountdown > 1) {
+          return previousCountdown - 1;
+        }
+
+
+        return 1;
+      });
     }, 1000);
 
-    return () => clearInterval(interval);
+    // Cleanup del setInterval
+    return () => {
+      clearInterval(interval);
+    };
   }, [isCoolingDown]);
 
-  // Reiniciar el juego
+
+
   const resetGame = () => {
     setCurrentQuestion(0);
     setLives(3);
@@ -67,13 +98,14 @@ export default function App() {
     setCountdown(3);
   };
 
-  // Pantalla final
   if (currentQuestion >= questions.length) {
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
           <View style={styles.resultCard}>
-            <Text style={styles.resultTitle}>¡Fin del juego!</Text>
+            <Text style={styles.resultTitle}>
+              ¡Fin del juego!
+            </Text>
 
             <Text style={styles.resultScore}>
               Puntaje: {score} / {questions.length}
@@ -99,7 +131,6 @@ export default function App() {
 
   const question = questions[currentQuestion];
 
-  // Color del borde según el resultado
   const questionBorderColor =
     lastResult === 'correct'
       ? '#27AE60'
@@ -107,18 +138,18 @@ export default function App() {
       ? '#C00000'
       : '#4A90D9';
 
-  // Determina el estilo de cada respuesta
+
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) {
       return 'default';
     }
 
-    // La respuesta correcta se muestra en verde
+    // Mostrar la respuesta correcta en verde
     if (index === question.correct) {
       return 'correct';
     }
 
-    // La respuesta seleccionada incorrecta se muestra en rojo
+    // Mostrar la respuesta incorrecta seleccionada en rojo
     if (index === selectedIndex) {
       return 'wrong';
     }
@@ -126,10 +157,14 @@ export default function App() {
     return 'default';
   };
 
-  // Manejar selección de respuesta
   const handleAnswer = (index: number) => {
+    // No permitir respuestas durante cooldown
+    if (isCoolingDown) {
+      return;
+    }
+
     // Evitar múltiples selecciones
-    if (selectedIndex !== null || isCoolingDown) {
+    if (selectedIndex !== null) {
       return;
     }
 
@@ -138,18 +173,24 @@ export default function App() {
     const isCorrect = index === question.correct;
 
     if (isCorrect) {
-      // Respuesta correcta:
-      // aumenta el puntaje en 1
+      // Respuesta correcta
       setLastResult('correct');
-      setScore((previousScore) => previousScore + 1);
+
+      // Aumentar puntaje en 1
+      setScore(
+        (previousScore) => previousScore + 1
+      );
     } else {
-      // Respuesta incorrecta:
-      // pierde 1 vida
+      // Respuesta incorrecta
       setLastResult('wrong');
-      setLives((previousLives) => previousLives - 1);
+
+      // Perder 1 vida
+      setLives(
+        (previousLives) => previousLives - 1
+      );
     }
 
-    // Esperar antes de continuar
+    // Esperar 800 ms antes de continuar
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
@@ -163,35 +204,43 @@ export default function App() {
     }, 800);
   };
 
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+
         {/* CABECERA */}
         <View style={styles.header}>
-          <Text style={styles.logo}>PopQuiz</Text>
+          <Text style={styles.logo}>
+            PopQuiz
+          </Text>
 
           <View style={styles.stats}>
+
             {/* VIDAS */}
             <Text
               style={[
                 styles.statText,
                 {
                   color:
-                    lives <= 1 ? '#C00000' : '#FFFFFF',
+                    lives <= 1
+                      ? '#C00000'
+                      : '#FFFFFF',
                 },
               ]}
             >
-              Vidas: {'❤️ '.repeat(lives).trim()}
+              Vidas:{' '}
+              {'❤️ '.repeat(lives).trim()}
             </Text>
 
             {/* PUNTAJE */}
             <Text style={styles.statText}>
               Puntaje: {score} / 10
             </Text>
+
           </View>
         </View>
 
-        {/* TARJETA DE PREGUNTA */}
         <View
           style={[
             styles.questionCard,
@@ -201,7 +250,8 @@ export default function App() {
           ]}
         >
           <Text style={styles.questionNumber}>
-            Pregunta {currentQuestion + 1} de {questions.length}
+            Pregunta {currentQuestion + 1} de{' '}
+            {questions.length}
           </Text>
 
           <Text style={styles.questionText}>
@@ -219,26 +269,31 @@ export default function App() {
               key={index}
               label={option}
               onPress={() => handleAnswer(index)}
+
               disabled={
-                isCoolingDown || selectedIndex !== null
+                isCoolingDown ||
+                selectedIndex !== null
               }
+
               variant={getVariant(index)}
             />
           ))}
         </ScrollView>
 
-        {/* BANNER DE COOLDOWN */}
         {isCoolingDown && (
           <View style={styles.cooldownBanner}>
             <Text style={styles.cooldownText}>
-              ⏳ Espera {countdown} segundo(s) para continuar...
+              ⏳ Espera {countdown} segundo(s)
+              para continuar...
             </Text>
           </View>
         )}
+
       </SafeAreaView>
     </SafeAreaProvider>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
