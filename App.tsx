@@ -145,12 +145,13 @@ export default function App() {
         ))}
       </ScrollView>
 
-      {/* INCORRECTO: siempre visible */}
-      <View style={styles.cooldownBanner}>
-        <Text style={styles.cooldownText}>
-          ⏳ Espera {countdown} segundo(s) para continuar...
-        </Text>
-      </View>
+      {isCoolingDown && (
+        <View style={styles.cooldownBanner}>
+          <Text style={styles.cooldownText}>
+            ⏳ Espera {countdown} segundo(s) para continuar...
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
     </SafeAreaProvider>
   );
