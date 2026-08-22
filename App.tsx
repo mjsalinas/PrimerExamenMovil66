@@ -77,14 +77,15 @@ const interval = setInterval(() => {
   }
 
   const question = questions[currentQuestion];
-  const questionBorderColor = '#4A90D9'; 
+  const questionBorderColor = lastResult === 'correct' ? '#4CAF50':lastResult === 'wrong' ? '#E53935':'#4A90D9';
 
-  const getVariant = (index: number): AnswerVariant => {
-    if (selectedIndex === null) return 'default';
-    if (index === question.correct) return 'wrong';  
-    if (index === selectedIndex)    return 'correct';  
-    return 'default';
-  };
+ const getVariant = (index: number): AnswerVariant => {
+   if (selectedIndex === null) return 'default';
+   if (index === selectedIndex) {
+   return index === question.correct ? 'correct' : 'wrong';
+  }
+  return 'default';
+};
 
   const handleAnswer = (index: number) => {
     if (selectedIndex !== null || isCoolingDown) return;
