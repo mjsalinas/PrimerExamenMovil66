@@ -22,22 +22,24 @@ export default function App() {
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
   useEffect(() => {
-    // BUG D2: falta if (lives === 0)
-    setIsCoolingDown(true);       // BUG D3: debe estar DENTRO del callback del setTimeout
-    setLives(3);                  // BUG D3: debe estar DENTRO del callback del setTimeout
+    if lives > 0) {
+    setIsCoolingDown(true);
+    setCountdown(3);
     const timer = setTimeout(() => {
-      // aquí deberían estar setIsCoolingDown(false) y setLives(3)
+    setIsCoolingDown(false);
+    setLives(3);                 
     }, 3000);
-    setIsCoolingDown(false);      // BUG D3: fuera del callback
-    // BUG D4: falta return () => clearTimeout(timer)
-  }, []); // BUG D1: debe ser [lives]
+    return () => clearTimeout(timer);
+  }
+}, [lives]);
 
   useEffect(() => {
     if (!isCoolingDown) return;
     const interval = setInterval(() => {
-      setCountdown(c => c + 1); // BUG D6: debe ser c - 1
+      setCountdown(c => c - 1); 
     }, 1000);
-    // BUG D7: falta return () => clearInterval(interval)
+    
+    return () => clearInterval(interval);
   }, [isCoolingDown]);
 
   const resetGame = () => {
@@ -46,7 +48,8 @@ export default function App() {
     setScore(0);
     setSelectedIndex(null);
     setLastResult(null);
-    // FALTA: setIsCoolingDown(false) y setCountdown(3)
+    setIsCoolingDown(false);
+    setCountdown(3);
   };
 
   if (currentQuestion > questions.length) { // INCORRECTO — debe ser >=
