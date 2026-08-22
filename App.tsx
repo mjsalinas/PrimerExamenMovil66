@@ -4,10 +4,12 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import AnswerButton from './components/AnswerButton';
 import { questions } from './data/questions';
+import React from 'react';
 
 type AnswerVariant = 'default' | 'correct' | 'wrong';
 
