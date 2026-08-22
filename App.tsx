@@ -67,11 +67,11 @@ export default function App() {
   const questionBorderColor = '#4A90D9'; 
 
   const getVariant = (index: number): AnswerVariant => {
-    if (selectedIndex === null) return 'default';
-    if (index === question.correct) return 'wrong';  
-    if (index === selectedIndex)    return 'correct';  
-    return 'default';
-  };
+  if (selectedIndex === null) return 'default';
+  if (index === question.correct) return 'correct';
+  if (index === selectedIndex) return 'wrong';
+  return 'default';
+};
 
   const handleAnswer = (index: number) => {
     if (selectedIndex !== null || isCoolingDown) return;
@@ -99,7 +99,7 @@ export default function App() {
       <View style={styles.header}>
         <Text style={styles.logo}>PopQuiz</Text>
         <View style={styles.stats}>
-          <Text style={[styles.statText, { color: lives < 0 ? '#C00000' : '#FFFFFF' }]}>
+          <Text style={[styles.statText, { color: lives <= 1 ? '#C00000' : '#FFFFFF' }]}>
             ❤️ {lives}
           </Text>
           <Text style={styles.statText}>⭐ {score}</Text>
