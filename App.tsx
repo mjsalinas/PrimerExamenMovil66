@@ -50,6 +50,8 @@ export default function App() {
     setCurrentQuestion(0);
     setLives(3);
     setScore(0);
+    setIsCoolingDown(false)
+    setCountdown(3)
     setSelectedIndex(null);
     setLastResult(null);
   };
@@ -74,12 +76,13 @@ export default function App() {
   }
 
   const question = questions[currentQuestion];
-  const questionBorderColor = '#4A90D9'; 
+  const questionBorderColor = lastResult === 'correct' ? '#4CAF50' : lastResult === 'wrong' ? '#E53935' : '#4A90D9';
 
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return 'default';
-    if (index === question.correct) return 'correct';  
-    if (index === selectedIndex)    return 'wrong';  
+    if (index === selectedIndex){
+      return index === question.correct ? 'correct' : 'wrong';  
+    }
     return 'default';
   };
 
