@@ -23,18 +23,27 @@ export default function App() {
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
   useEffect(() => {
-    setIsCoolingDown(true);      
-    setLives(3);                  
+    if (lives !== 0) return;
+
+    setIsCoolingDown(true);
+    setCountdown(3);
     const timer = setTimeout(() => {
+      setLives(3);
+      setIsCoolingDown(false);
+      setCountdown(0);
     }, 3000);
-    setIsCoolingDown(false);   
-  }, []); 
+
+    return () => clearTimeout(timer);
+  }, [lives]);
 
   useEffect(() => {
     if (!isCoolingDown) return;
+
     const interval = setInterval(() => {
-      setCountdown(c => c + 1); 
+      setCountdown(currentCountdown => Math.max(currentCountdown - 1, 1));
     }, 1000);
+
+    return () => clearInterval(interval);
   }, [isCoolingDown]);
 
   const resetGame = () => {
@@ -126,12 +135,13 @@ export default function App() {
         ))}
       </ScrollView>
 
-      {/* INCORRECTO: siempre visible */}
-      <View style={styles.cooldownBanner}>
-        <Text style={styles.cooldownText}>
-          ⏳ Espera {countdown} segundo(s) para continuar...
-        </Text>
-      </View>
+      {isCoolingDown && (
+        <View style={styles.cooldownBanner}>
+          <Text style={styles.cooldownText}>
+            ⏳ Espera {countdown} segundo(s) para continuar...
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
     </SafeAreaProvider>
   );
