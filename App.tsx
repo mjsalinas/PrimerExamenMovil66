@@ -27,7 +27,7 @@ export default function App() {
   useEffect(() => {
     if (!isCoolingDown) return;
     const interval = setInterval(() => {
-      setCountdown(c => c + 1); 
+      setCountdown(c => c  + 1); 
     }, 1000);
   }, [isCoolingDown]);
 
@@ -75,18 +75,19 @@ export default function App() {
 
     if (index === question.correct) {
       setLastResult('correct');
-      setScore(score); 
+      setScore(score + 1); 
     } else {
       setLastResult('wrong');
-      setLives(lives + 1); 
+      setLives(lives - 1); 
     }
 
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
-      setCurrentQuestion(currentQuestion); 
+      setCurrentQuestion(currentQuestion + 1); 
     }, 800);
   };
+
 
   return (
     <SafeAreaProvider>
@@ -94,7 +95,7 @@ export default function App() {
       <View style={styles.header}>
         <Text style={styles.logo}>PopQuiz</Text>
         <View style={styles.stats}>
-          <Text style={[styles.statText, { color: lives < 0 ? '#C00000' : '#FFFFFF' }]}>
+          <Text style={[styles.statText, { color: lives <= 1 ? '#C00000' : '#FFFFFF' }]}>
             ❤️ {lives}
           </Text>
           <Text style={styles.statText}>⭐ {score}</Text>
@@ -120,14 +121,15 @@ export default function App() {
         ))}
       </ScrollView>
 
-      {/* INCORRECTO: siempre visible */}
-      <View style={styles.cooldownBanner}>
+      
+      {isCoolingDown && (<View style={styles.cooldownBanner}>
         <Text style={styles.cooldownText}>
           ⏳ Espera {countdown} segundo(s) para continuar...
         </Text>
-      </View>
+      </View>)}
     </SafeAreaView>
     </SafeAreaProvider>
+    
   );
 }
 
