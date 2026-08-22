@@ -14,14 +14,14 @@ export default function AnswerButton({
   variant = 'default',
 }: AnswerButtonProps) {
   const getBackgroundColor = () => {
-    if (disabled) return '#FFFFFF'; 
-    if (variant === 'correct') return '#E53935';
-    if (variant === 'wrong') return '#4CAF50';
+    if (disabled) return '#B0BEC5';
+    if (variant === 'correct') return '#4CAF50';
+    if (variant === 'wrong') return '#E53935';
     return '#FFFFFF';
   };
 
   const getTextColor = () => {
-    if (disabled) return '#1A1A2E'; 
+    if (disabled) return '#78909C';
     if (variant === 'correct' || variant === 'wrong') return '#FFFFFF';
     return '#1A1A2E';
   };
@@ -32,7 +32,19 @@ export default function AnswerButton({
   };
 
   return (
-    <Pressable onPress={onPress} style={[styles.button, { backgroundColor: getBackgroundColor(), borderColor: getBorderColor() }]}>
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={({ pressed }) => [
+        styles.button,
+        {
+          backgroundColor: getBackgroundColor(),
+          borderColor: getBorderColor(),
+          opacity: disabled ? 0.55 : 1,
+        },
+        pressed && styles.pressed,
+      ]}
+    >
       <Text style={[styles.label, { color: getTextColor() }]}>{label}</Text>
     </Pressable>
   );
@@ -56,3 +68,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#DBEAFE',
   },
 });
+
+//ANSWER BUTTON
