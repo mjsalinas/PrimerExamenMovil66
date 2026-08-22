@@ -35,13 +35,15 @@ export default function App() {
     }
   }, [lives, isCoolingDown]);
 
-  useEffect(() => {
+ useEffect(() => {
     if (!isCoolingDown) return;
-    const interval = setInterval(() => {
-      setCountdown(c => c + 1); 
-    }, 1000);
-  }, [isCoolingDown]);
 
+    const interval = setInterval(() => {
+      setCountdown((prevCount) => (prevCount > 1 ? prevCount - 1 : 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isCoolingDown]);
+  
   const resetGame = () => {
     setCurrentQuestion(0);
     setLives(3);
@@ -67,9 +69,11 @@ export default function App() {
         </SafeAreaView>
       </SafeAreaProvider>
     );
-  } /*ioyggi*/
+  } 
 
   const question = questions[currentQuestion];
+
+  
   const questionBorderColor = '#4A90D9'; 
 
   const getVariant = (index: number): AnswerVariant => {
@@ -99,6 +103,7 @@ export default function App() {
     }, 800);
   };
 
+ 
   return (
     <SafeAreaProvider>
     <SafeAreaView style={styles.container}>
