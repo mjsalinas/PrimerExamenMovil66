@@ -12,11 +12,10 @@ import { questions } from './data/questions';
 
 type AnswerVariant = 'default' | 'correct' | 'wrong';
 
-/*Comentario de prieba */
 
 export default function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [lives, setLives] = useState(0); 
+  const [lives, setLives] = useState(3); 
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
   const [countdown, setCountdown] = useState(0); 
@@ -46,7 +45,7 @@ export default function App() {
     setLastResult(null);
   };
 
-  if (currentQuestion > questions.length) { 
+  if (currentQuestion > questions.length || lives <= 0 ) { 
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
@@ -70,8 +69,8 @@ export default function App() {
 
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return 'default';
-    if (index === question.correct) return 'wrong';  
-    if (index === selectedIndex)    return 'correct';  
+    if (index === question.correct) return 'correct';  
+    if (index === selectedIndex)    return 'wrong';  
     return 'default';
   };
 
@@ -82,16 +81,16 @@ export default function App() {
 
     if (index === question.correct) {
       setLastResult('correct');
-      setScore(score); 
+      setScore(score + 1); 
     } else {
       setLastResult('wrong');
-      setLives(lives + 1); 
+      setLives(lives - 1); 
     }
 
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
-      setCurrentQuestion(currentQuestion); 
+      setCurrentQuestion(prev => prev + 1); 
     }, 800);
   };
 
@@ -101,10 +100,10 @@ export default function App() {
       <View style={styles.header}>
         <Text style={styles.logo}>PopQuiz</Text>
         <View style={styles.stats}>
-          <Text style={[styles.statText, { color: lives < 0 ? '#C00000' : '#FFFFFF' }]}>
-            ❤️ {lives}
+          <Text style={[styles.statText, { color: lives <= 1 ? '#C00000' : '#FFFFFF' }]}>
+            Vidas: {'❤️'.repeat(Math.max(0, lives))}
           </Text>
-          <Text style={styles.statText}>⭐ {score}</Text>
+          <Text style={styles.statText}>Puntaje: {score} / {questions.length}</Text>
         </View>
       </View>
 
