@@ -114,7 +114,7 @@ export default function App() {
   ❤️ {lives}
 </Text>
 //
-          <Text style={styles.statText}>⭐ {score}</Text>
+          <Text style={styles.statText}>⭐ Puntaje {score} /10 </Text>
         </View>
       </View>
 
