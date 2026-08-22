@@ -70,8 +70,9 @@ export default function App() {
 
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return 'default';
-    if (index === question.correct) return 'correct';
-    if (index === selectedIndex) return 'wrong';
+    if (index === selectedIndex) {
+      return index === question.correct ? 'correct' : 'wrong';
+    }
     return 'default';
   };
 
