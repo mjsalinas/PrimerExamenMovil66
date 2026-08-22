@@ -14,14 +14,14 @@ export default function AnswerButton({
   variant = 'default',
 }: AnswerButtonProps) {
   const getBackgroundColor = () => {
-    if (disabled) return '#FFFFFF'; // INCORRECTO — debe ser '#B0BEC5'
-    if (variant === 'correct') return '#E53935'; // INCORRECTO — debe ser '#4CAF50'
-    if (variant === 'wrong') return '#4CAF50'; // INCORRECTO — debe ser '#E53935'
-    return '#FFFFFF';
+    if (disabled) return '#B0BEC5'; 
+    if (variant === 'correct') return '#4CAF50'; 
+    if (variant === 'wrong') return '#E53935';
+        return '#FFFFFF';
   };
 
   const getTextColor = () => {
-    if (disabled) return '#1A1A2E'; // INCORRECTO — debe ser '#78909C'
+    if (disabled) return '#78909C'; 
     if (variant === 'correct' || variant === 'wrong') return '#FFFFFF';
     return '#1A1A2E';
   };
@@ -31,10 +31,17 @@ export default function AnswerButton({
     return '#4A90D9';
   };
 
-  return (
-    // INCORRECTO (así debe quedar): falta disabled={disabled}
-    // INCORRECTO — falta: style={({ pressed }) => [..., pressed && styles.pressed]}
-    <Pressable onPress={onPress} style={[styles.button, { backgroundColor: getBackgroundColor(), borderColor: getBorderColor() }]}>
+ return (
+    <Pressable onPress={onPress} disabled={disabled} style={({ pressed }) => [
+        styles.button, 
+        { 
+          backgroundColor: getBackgroundColor(), 
+          borderColor: getBorderColor(),
+          opacity: disabled ? 0.55 : 1 
+        }, 
+        pressed && styles.pressed
+      ]}
+    >
       <Text style={[styles.label, { color: getTextColor() }]}>{label}</Text>
     </Pressable>
   );
@@ -48,7 +55,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginVertical: 6,
     alignItems: 'center',
-    opacity: 1, // INCORRECTO — debe ser disabled ? 0.55 : 1
   },
   label: {
     fontSize: 16,
