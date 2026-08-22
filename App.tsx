@@ -15,10 +15,10 @@ type AnswerVariant = "default" | "correct" | "wrong";
 
 export default function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [lives, setLives] = useState(3); // INCORRECTO — debe ser useState(3)
+  const [lives, setLives] = useState(3); 
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(3); // INCORRECTO — debe ser useState(3)
+  const [countdown, setCountdown] = useState(3); 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lastResult, setLastResult] = useState<"correct" | "wrong" | null>(
     null,
@@ -55,7 +55,8 @@ export default function App() {
     setScore(0);
     setSelectedIndex(null);
     setLastResult(null);
-    // FALTA: setIsCoolingDown(false) y setCountdown(3)
+    setIsCoolingDown(false)
+    setCountdown(3)
   };
 
   if (currentQuestion >= questions.length) {
@@ -78,12 +79,23 @@ export default function App() {
   }
 
   const question = questions[currentQuestion];
-  const questionBorderColor = "#4A90D9"; // siempre azul — debe cambiar según lastResult
+  const questionBorderColor = () => {
+    switch (lastResult) {
+      case "correct":
+        return "#4CAF50";
+      case "wrong":
+        return "#E53935";
+      default:
+        return "#4A90D9";
+    }
+  
+  } 
+    // siempre azul — debe cambiar según lastResult
 
   const getVariant = (index: number): AnswerVariant => {
     if (selectedIndex === null) return "default";
-    if (index === question.correct) return "wrong"; // INCORRECTO — debe ser 'correct'
-    if (index === selectedIndex) return "correct"; // INCORRECTO — debe ser 'wrong'
+    if (index === question.correct) return "correct"; // INCORRECTO — debe ser 'correct'
+    if (index === selectedIndex) return "wrong"; // INCORRECTO — debe ser 'wrong'
     return "default";
   };
 
@@ -100,21 +112,21 @@ export default function App() {
 
     setSelectedIndex(index);
 
-
     if (index === question.correct) {
       setLastResult("correct");
-      setScore(score + 1); // INCORRECTO — debe ser setScore(score + 1)
+      setScore(score + 1); 
     } else {
       setLastResult("wrong");
-      setLives(lives - 1); // INCORRECTO — debe ser setLives(lives - 1)
+      setLives(lives - 1); 
     }
 
     setTimeout(() => {
       setSelectedIndex(null);
       setLastResult(null);
-      setCurrentQuestion(currentQuestion + 1); // INCORRECTO — debe ser currentQuestion + 1
+      setCurrentQuestion(currentQuestion + 1);
     }, 800);
   };
+
 
   return (
     <SafeAreaProvider>
@@ -139,7 +151,7 @@ export default function App() {
         </View>
 
         <View
-          style={[styles.questionCard, { borderColor: questionBorderColor }]}
+          style={[styles.questionCard, { borderColor: questionBorderColor() }]}
         >
           <Text style={styles.questionNumber}>
             Pregunta {currentQuestion + 1} de {questions.length}
@@ -161,8 +173,6 @@ export default function App() {
             />
           ))}
         </ScrollView>
-
-        {/* INCORRECTO: siempre visible */}
 
         {isCoolingDown ? (
           <View style={styles.cooldownBanner}>
