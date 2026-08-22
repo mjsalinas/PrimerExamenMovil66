@@ -22,12 +22,12 @@ export default function App() {
   const [lastResult, setLastResult] = useState<'correct' | 'wrong' | null>(null);
 
   useEffect(() => {
-    setIsCoolingDown(true);      
-    setLives(3);                  
+    setIsCoolingDown(true);
     const timer = setTimeout(() => {
+      setIsCoolingDown(false);
     }, 3000);
-    setIsCoolingDown(false);   
-  }, []); 
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (!isCoolingDown) return;
