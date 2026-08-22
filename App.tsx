@@ -1,11 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import AnswerButton from './components/AnswerButton';
 import { questions } from './data/questions';
@@ -236,3 +230,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+
+//APP TSX
